@@ -66,7 +66,7 @@ public class WSClient extends WebSocketClient {
             try {
                 wsClient = new WSClient();
                 Thread.sleep(3000);
-                wsClient.connect();
+                wsClient.connectBlocking();
             } catch (URISyntaxException | InterruptedException e) {
                 e.printStackTrace();
             }
