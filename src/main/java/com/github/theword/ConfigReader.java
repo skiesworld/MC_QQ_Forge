@@ -1,4 +1,4 @@
-package com.scareye.mcqq;
+package com.github.theword;
 
 import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.scareye.mcqq.MCQQ.LOGGER;
+import static com.github.theword.MCQQ.LOGGER;
 
 public class ConfigReader {
     public static Map<String, Object> config() {
@@ -38,12 +38,13 @@ public class ConfigReader {
             LOGGER.info("读取配置文件失败，将采用默认值");
             configMap = new HashMap<>();
             configMap.put("enable_mc_qq", true);
-            configMap.put("websocket_url", "ws://127.0.0.1:8765");
+            configMap.put("enable_reconnect_msg", true);
+            configMap.put("websocket_url", "ws://127.0.0.1:8080/minecraft/ws");
             configMap.put("say_way", " 说：");
+            configMap.put("command_message", false);
             configMap.put("death_message", true);
             configMap.put("join_quit", true);
             configMap.put("server_name", "Server");
-            configMap.put("display_groupname", false);
             configMap.put("log_local", ".\\logs\\");
             configMap.put("log_name", "latest.log");
             return configMap;
