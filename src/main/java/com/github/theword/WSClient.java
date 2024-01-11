@@ -1,4 +1,4 @@
-package com.scareye.mcqq;
+package com.github.theword;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -6,18 +6,17 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static com.scareye.mcqq.MCQQ.wsClient;
-import static com.scareye.mcqq.MCQQ.LOGGER;
-import static com.scareye.mcqq.MCQQ.httpHeaders;
-import static com.scareye.mcqq.MCQQ.connectTime;
-import static com.scareye.mcqq.MCQQ.serverOpen;
-import static com.scareye.mcqq.ConfigReader.config;
+import static com.github.theword.MCQQ.wsClient;
+import static com.github.theword.MCQQ.LOGGER;
+import static com.github.theword.MCQQ.httpHeaders;
+import static com.github.theword.MCQQ.connectTime;
+import static com.github.theword.MCQQ.serverOpen;
 
 public class WSClient extends WebSocketClient {
 
 
     public WSClient() throws URISyntaxException {
-        super(new URI((String) config().get("websocket_url")), httpHeaders);
+        super(new URI((String) ConfigReader.config().get("websocket_url")), httpHeaders);
     }
 
     /**
@@ -67,7 +66,7 @@ public class WSClient extends WebSocketClient {
             try {
                 wsClient = new WSClient();
                 Thread.sleep(3000);
-                wsClient.connectBlocking();
+                wsClient.connect();
             } catch (URISyntaxException | InterruptedException e) {
                 e.printStackTrace();
             }

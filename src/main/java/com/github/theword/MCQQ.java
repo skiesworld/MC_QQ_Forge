@@ -1,4 +1,4 @@
-package com.scareye.mcqq;
+package com.github.theword;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -47,8 +47,8 @@ public class MCQQ {
         LOGGER.info("WebSocket URL: " + ConfigReader.config().get("websocket_url"));
         try {
             wsClient = new WSClient();
-            wsClient.connectBlocking();
-        } catch (URISyntaxException | InterruptedException e) {
+            wsClient.connect();
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }
