@@ -4,13 +4,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class ForgeMessageEvent extends ForgeEvent {
     @SerializedName("message_id")
-    private final String messageId = "";
+    private String messageId;
     private final ForgeServerPlayer player;
     private final String message;
 
-    public ForgeMessageEvent(String eventName, String subType, ForgeServerPlayer player, String message) {
+    public ForgeMessageEvent(String eventName, String subType, String messageId, ForgeServerPlayer player, String message) {
         super(eventName, "message", subType);
-        this.message = message;
+        this.messageId = messageId;
         this.player = player;
+        this.message = message;
     }
 }
