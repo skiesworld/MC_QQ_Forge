@@ -54,7 +54,7 @@ public class MCQQ {
             wsClient = new WSClient();
             wsClient.connect();
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            LOGGER.error("WebSocket 连接失败，URL 格式错误。");
         }
     }
 
