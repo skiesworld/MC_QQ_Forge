@@ -11,6 +11,7 @@ import static com.github.theword.MCQQ.LOGGER;
 import static com.github.theword.MCQQ.httpHeaders;
 import static com.github.theword.MCQQ.connectTime;
 import static com.github.theword.MCQQ.serverOpen;
+import static com.github.theword.Utils.parseWebSocketJson;
 
 public class WSClient extends WebSocketClient {
 
@@ -36,18 +37,22 @@ public class WSClient extends WebSocketClient {
      */
     @Override
     public void onMessage(String message) {
-        // Mod端无需接收消息
+        try {
+            parseWebSocketJson(message);
+        } catch (Exception e) {
+            LOGGER.error("解析消息时出现错误：" + message);
+        }
     }
 
     /**
      * 关闭时
      *
-     * @param i 关闭码
-     * @param s 关闭信息
-     * @param b 是否关闭
+     * @param code   关闭码
+     * @param reason 关闭信息
+     * @param remote 是否关闭
      */
     @Override
-    public void onClose(int i, String s, boolean b) {
+    public void onClose(int code, String reason, boolean remote) {
         if (serverOpen && wsClient != null) {
             wsClient.sendPing();
         }
@@ -67,8 +72,10 @@ public class WSClient extends WebSocketClient {
                 wsClient = new WSClient();
                 Thread.sleep(3000);
                 wsClient.connectBlocking();
-            } catch (URISyntaxException | InterruptedException e) {
-                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                LOGGER.error("WebSocket 连接失败，URL 格式错误。");
+            } catch (InterruptedException e) {
+                LOGGER.error("WebSocket 连接失败，线程中断。");
             }
         }
     }
