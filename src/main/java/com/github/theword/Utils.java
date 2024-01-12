@@ -76,7 +76,7 @@ public class Utils {
         return forgeServerPlayer;
     }
 
-    static void parseWebSocketJson(String message) {
+    public static void parseWebSocketJson(String message) {
         // 组合消息
         Gson gson = new Gson();
         BaseReturnBody baseReturnBody = gson.fromJson(message, BaseReturnBody.class);
