@@ -38,10 +38,12 @@ public class WSClient extends WebSocketClient {
      */
     @Override
     public void onMessage(String message) {
-        try {
-            parseWebSocketJson(message);
-        } catch (Exception e) {
-            LOGGER.error("解析消息时出现错误：" + message);
+        if ((Boolean) config().get("enable_mc_qq")) {
+            try {
+                parseWebSocketJson(message);
+            } catch (Exception e) {
+                LOGGER.error("解析消息时出现错误：" + message);
+            }
         }
     }
 
