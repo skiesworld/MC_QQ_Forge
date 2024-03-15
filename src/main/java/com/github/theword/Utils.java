@@ -9,8 +9,10 @@ import com.google.gson.JsonElement;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
-import static com.github.theword.MCQQ.LOGGER;
-import static com.github.theword.MCQQ.server;
+import java.net.URISyntaxException;
+
+import static com.github.theword.MCQQ.*;
+import static com.github.theword.MCQQ.wsClientList;
 import static com.github.theword.parse.ParseJsonToEvent.parseMessages;
 
 public class Utils {
@@ -85,7 +87,7 @@ public class Utils {
             case "broadcast":
                 MessageReturnBody messageList = gson.fromJson(data, MessageReturnBody.class);
                 MutableComponent result = parseMessages(messageList.getMessageList());
-                for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
+                for (ServerPlayer serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
                     serverPlayer.sendSystemMessage(result);
                 }
                 break;
