@@ -44,7 +44,7 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onPlayerCommand(CommandEvent event) {
-        if ((Boolean) configMap.get("command_message") && !event.isCanceled()) {
+        if (config.isEnableCommandMessage() && !event.isCanceled()) {
             if (event.getParseResults().getContext().getSource().isPlayer()) {
                 String command = event.getParseResults().getReader().getString();
 
