@@ -17,12 +17,11 @@ import static com.github.theword.Utils.*;
 
 public class EventProcessor {
 
-
     @SubscribeEvent
     public void onServerChat(ServerChatEvent event) {
         if (config.isEnableChatMessage()) {
             ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent("", getPlayer(event.getPlayer()), event.getMessage().getString());
-            wsClient.sendMessage(getEventJson(forgeServerChatEvent));
+            sendMessage(getEventJson(forgeServerChatEvent));
         }
     }
 
@@ -30,7 +29,7 @@ public class EventProcessor {
     public void onPlayerJoin(PlayerLoggedInEvent event) {
         if (config.isEnableJoinMessage() && !event.isCanceled()) {
             ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(getPlayer((ServerPlayer) event.getEntity()));
-            wsClient.sendMessage(getEventJson(forgePlayerLoggedInEvent));
+            sendMessage(getEventJson(forgePlayerLoggedInEvent));
         }
     }
 
@@ -38,7 +37,7 @@ public class EventProcessor {
     public void onPlayerQuit(PlayerLoggedOutEvent event) {
         if (config.isEnableQuitMessage() && !event.isCanceled()) {
             ForgePlayerLoggedOutEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedOutEvent(getPlayer((ServerPlayer) event.getEntity()));
-            wsClient.sendMessage(getEventJson(forgePlayerLoggedInEvent));
+            sendMessage(getEventJson(forgePlayerLoggedInEvent));
         }
     }
 
@@ -51,7 +50,7 @@ public class EventProcessor {
                 if (!command.startsWith("l ") && !command.startsWith("login ") && !command.startsWith("register ") && !command.startsWith("reg ")) {
                     ForgeServerPlayer player = getPlayer(Objects.requireNonNull(event.getParseResults().getContext().getSource().getPlayer()));
                     ForgeCommandEvent forgeCommandEvent = new ForgeCommandEvent("", player, command);
-                    wsClient.sendMessage(getEventJson(forgeCommandEvent));
+                    sendMessage(getEventJson(forgeCommandEvent));
                 }
             }
         }
@@ -63,7 +62,7 @@ public class EventProcessor {
             if (event.getEntity() instanceof ServerPlayer) {
                 ForgeServerPlayer player = getPlayer((ServerPlayer) event.getEntity());
                 ForgePlayerDeathEvent forgeCommandEvent = new ForgePlayerDeathEvent("", player, event.getSource().getLocalizedDeathMessage(event.getEntity()).getString());
-                wsClient.sendMessage(getEventJson(forgeCommandEvent));
+                sendMessage(getEventJson(forgeCommandEvent));
             }
         }
     }
