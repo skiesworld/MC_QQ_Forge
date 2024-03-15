@@ -27,13 +27,9 @@ public class MCQQ {
     public static final String MOD_ID = "mcqq";
     public static final String MOD_NAME = "MC_QQ";
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
-
-    static WSClient wsClient;
-    static Map<String, String> httpHeaders = new HashMap<>();
-    static int connectTime;
-    static boolean serverOpen;
-
-    static MinecraftServer server;
+    public static Config config = new Config(true);
+    static MinecraftServer minecraftServer;
+    static List<WsClient> wsClientList = new ArrayList<>();
 
     public MCQQ() {
         MinecraftForge.EVENT_BUS.register(this);
