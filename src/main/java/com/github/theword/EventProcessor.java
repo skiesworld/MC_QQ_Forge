@@ -47,7 +47,7 @@ public class EventProcessor {
             if (event.getParseResults().getContext().getSource().isPlayer()) {
                 String command = event.getParseResults().getReader().getString();
 
-                if (!command.startsWith("l ") && !command.startsWith("login ") && !command.startsWith("register ") && !command.startsWith("reg ")) {
+                if (!command.startsWith("l ") && !command.startsWith("login ") && !command.startsWith("register ") && !command.startsWith("reg ") && !command.startsWith("mcqq ")) {
                     ForgeServerPlayer player = getPlayer(Objects.requireNonNull(event.getParseResults().getContext().getSource().getPlayer()));
                     ForgeCommandEvent forgeCommandEvent = new ForgeCommandEvent("", player, command);
                     sendMessage(getEventJson(forgeCommandEvent));
