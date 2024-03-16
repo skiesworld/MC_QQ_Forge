@@ -1,4 +1,4 @@
-package com.github.theword.event;
+package com.github.theword.models;
 
 public class ForgeCommandEvent extends ForgeMessageEvent {
     public ForgeCommandEvent(String messageId, ForgeServerPlayer player, String command) {

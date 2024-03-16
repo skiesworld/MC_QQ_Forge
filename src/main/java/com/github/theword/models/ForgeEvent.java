@@ -1,4 +1,4 @@
-package com.github.theword.event;
+package com.github.theword.models;
 
 import com.google.gson.annotations.SerializedName;
 
