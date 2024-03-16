@@ -1,7 +1,7 @@
 package com.github.theword;
 
 
-import com.github.theword.event.*;
+import com.github.theword.models.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
@@ -13,7 +13,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import java.util.Objects;
 
 import static com.github.theword.MCQQ.config;
-import static com.github.theword.Utils.*;
+import static com.github.theword.utils.Tool.*;
 
 public class EventProcessor {
 
