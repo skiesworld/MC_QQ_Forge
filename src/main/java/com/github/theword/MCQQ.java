@@ -1,5 +1,6 @@
 package com.github.theword;
 
+import com.github.theword.constant.WebsocketConstantMessage;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -8,18 +9,13 @@ import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import static com.github.theword.ConfigReader.configMap;
-import static com.github.theword.ConfigReader.loadConfig;
-import static com.github.theword.Utils.unicodeEncode;
 
 @Mod(MCQQ.MOD_ID)
 public class MCQQ {
@@ -27,13 +23,9 @@ public class MCQQ {
     public static final String MOD_ID = "mcqq";
     public static final String MOD_NAME = "MC_QQ";
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
-
-    static WSClient wsClient;
-    static Map<String, String> httpHeaders = new HashMap<>();
-    static int connectTime;
-    static boolean serverOpen;
-
-    static MinecraftServer server;
+    public static Config config = new Config(true);
+    public static MinecraftServer minecraftServer;
+    public static List<WsClient> wsClientList = new ArrayList<>();
 
     public MCQQ() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -43,26 +35,30 @@ public class MCQQ {
     @OnlyIn(Dist.DEDICATED_SERVER)
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
-        loadConfig();
-        httpHeaders.put("x-self-name", unicodeEncode(configMap.get("server_name").toString()));
-        connectTime = 0;
-        serverOpen = true;
-        LOGGER.info("WebSocket Client 正在启动...");
-        LOGGER.info("WebSocket URL: " + configMap.get("websocket_url"));
-        server = event.getServer();
-        try {
-            wsClient = new WSClient();
-            wsClient.connect();
-        } catch (URISyntaxException e) {
-            LOGGER.error("WebSocket 连接失败，URL 格式错误。");
-        }
+        LOGGER.info(WebsocketConstantMessage.WEBSOCKET_RUNNING);
+        minecraftServer = event.getServer();
+        config.getWebsocketUrlList().forEach(url -> {
+            try {
+                WsClient wsClient = new WsClient(url);
+                wsClient.connect();
+                wsClientList.add(wsClient);
+            } catch (URISyntaxException e) {
+                LOGGER.warn(WebsocketConstantMessage.WEBSOCKET_ERROR_URI_SYNTAX_ERROR.formatted(url));
+            }
+        });
     }
 
     @OnlyIn(Dist.DEDICATED_SERVER)
     @SubscribeEvent
     public void onServerStopping(ServerStoppingEvent event) {
-        LOGGER.info("WebSocket Client 正在关闭...");
-        serverOpen = false;
-        wsClient.close();
+        wsClientList.forEach(
+                wsClient -> {
+                    wsClient.close(
+                            1000,
+                            WebsocketConstantMessage.WEBSOCKET_CLOSING.formatted(wsClient.getURI())
+                    );
+                    wsClient.getTimer().cancel();
+                }
+        );
     }
 }

@@ -1,4 +1,4 @@
-package com.github.theword.parse;
+package com.github.theword.utils;
 
 import com.github.theword.returnBody.returnModle.MyBaseComponent;
 import com.github.theword.returnBody.returnModle.MyTextComponent;
@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.List;
 
 public class ParseJsonToEvent {
-    public static MutableComponent parseMessages(List<? extends MyBaseComponent> myBaseComponentList) {
+    public MutableComponent parseMessages(List<? extends MyBaseComponent> myBaseComponentList) {
         MutableComponent mutableComponent = parsePerMessageToMultiText(myBaseComponentList.get(0));
         for (int i = 1; i < myBaseComponentList.size(); i++) {
             MyBaseComponent myBaseComponent = myBaseComponentList.get(i);
@@ -19,7 +19,7 @@ public class ParseJsonToEvent {
         return mutableComponent;
     }
 
-    public static MutableComponent parsePerMessageToMultiText(MyBaseComponent myBaseComponent) {
+    public MutableComponent parsePerMessageToMultiText(MyBaseComponent myBaseComponent) {
         LiteralContents literalContents = new LiteralContents(myBaseComponent.getText());
 
         ResourceLocation font = null;

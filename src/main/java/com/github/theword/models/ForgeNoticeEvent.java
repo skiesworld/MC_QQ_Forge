@@ -1,4 +1,4 @@
-package com.github.theword.event;
+package com.github.theword.models;
 
 
 public class ForgeNoticeEvent extends ForgeEvent {
