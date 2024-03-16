@@ -1,21 +1,18 @@
-package com.github.theword;
+package com.github.theword.utils;
 
-import com.github.theword.event.ForgeEvent;
-import com.github.theword.event.ForgeServerPlayer;
-import com.github.theword.returnBody.BaseReturnBody;
-import com.github.theword.returnBody.MessageReturnBody;
+import com.github.theword.constant.WebsocketConstantMessage;
+import com.github.theword.models.ForgeEvent;
+import com.github.theword.models.ForgeServerPlayer;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
+import com.mojang.brigadier.context.CommandContext;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.net.URISyntaxException;
-
 import static com.github.theword.MCQQ.*;
-import static com.github.theword.MCQQ.wsClientList;
-import static com.github.theword.parse.ParseJsonToEvent.parseMessages;
 
-public class Utils {
+public class Tool {
 
     /**
      * 字符串转为 unicode 编码
@@ -23,7 +20,7 @@ public class Utils {
      * @param string 字符串
      * @return unicode编码
      */
-    static String unicodeEncode(String string) {
+    public static String unicodeEncode(String string) {
         char[] utfBytes = string.toCharArray();
         StringBuilder unicodeBytes = new StringBuilder();
         for (char utfByte : utfBytes) {
@@ -78,41 +75,21 @@ public class Utils {
         return forgeServerPlayer;
     }
 
-    public static void parseWebSocketJson(String message) {
-        // 组合消息
-        Gson gson = new Gson();
-        BaseReturnBody baseReturnBody = gson.fromJson(message, BaseReturnBody.class);
-        JsonElement data = baseReturnBody.getData();
-        switch (baseReturnBody.getApi()) {
-            case "broadcast":
-                MessageReturnBody messageList = gson.fromJson(data, MessageReturnBody.class);
-                MutableComponent result = parseMessages(messageList.getMessageList());
-                for (ServerPlayer serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
-                    serverPlayer.sendSystemMessage(result);
-                }
-                break;
-            default:
-                LOGGER.warn("未知的 API: " + baseReturnBody.getApi());
-                break;
-        }
-    }
-
     public static void sendMessage(String message) {
         if (config.isEnableMcQQ()) {
             wsClientList.forEach(
-                    wsClient -> wsClient.sendMessage(message)
+                    wsClient -> {
+                        if (wsClient.isOpen()) {
+                            wsClient.send(message);
+                        } else {
+                            LOGGER.info(String.format(WebsocketConstantMessage.WEBSOCKET_IS_NOT_OPEN_WHEN_SEND_MESSAGE, wsClient.getURI()));
+                        }
+                    }
             );
         }
     }
 
-    public static WsClient connectWebsocket(String url) {
-        try {
-            WsClient wsClient = new WsClient(url);
-            wsClient.connect();
-            return wsClient;
-        } catch (URISyntaxException e) {
-            LOGGER.warn("[MC_QQ] 连接 WebSocket 失败: " + e.getMessage());
-        }
-        return null;
+    public static void sendResultComponent(CommandContext<CommandSourceStack> context, String text) {
+        context.getSource().sendSystemMessage(MutableComponent.create(new LiteralContents(text)));
     }
 }
