@@ -1,5 +1,6 @@
 package com.github.theword;
 
+import com.github.theword.constant.WebsocketConstantMessage;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -23,8 +24,8 @@ public class MCQQ {
     public static final String MOD_NAME = "MC_QQ";
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
     public static Config config = new Config(true);
-    static MinecraftServer minecraftServer;
-    static List<WsClient> wsClientList = new ArrayList<>();
+    public static MinecraftServer minecraftServer;
+    public static List<WsClient> wsClientList = new ArrayList<>();
 
     public MCQQ() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -34,7 +35,7 @@ public class MCQQ {
     @OnlyIn(Dist.DEDICATED_SERVER)
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
-        LOGGER.info("WebSocket Client 正在启动...");
+        LOGGER.info(WebsocketConstantMessage.WEBSOCKET_RUNNING);
         minecraftServer = event.getServer();
         config.getWebsocketUrlList().forEach(url -> {
             try {
@@ -42,7 +43,7 @@ public class MCQQ {
                 wsClient.connect();
                 wsClientList.add(wsClient);
             } catch (URISyntaxException e) {
-                LOGGER.warn("[MC_QQ]|连接至：%s WebSocket URL 配置错误，无法连接！".formatted(url));
+                LOGGER.warn(WebsocketConstantMessage.WEBSOCKET_ERROR_URI_SYNTAX_ERROR.formatted(url));
             }
         });
     }
@@ -54,7 +55,7 @@ public class MCQQ {
                 wsClient -> {
                     wsClient.close(
                             1000,
-                            "[MC_QQ]|连接至：%s 的 WebSocket Client 正在关闭".formatted(wsClient.getURI())
+                            WebsocketConstantMessage.WEBSOCKET_CLOSING.formatted(wsClient.getURI())
                     );
                     wsClient.getTimer().cancel();
                 }

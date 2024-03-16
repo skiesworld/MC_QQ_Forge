@@ -1,5 +1,6 @@
 package com.github.theword;
 
+import com.github.theword.constant.ConfigConstantMessage;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
@@ -40,13 +41,13 @@ public class Config {
         }
         Path configMapFilePath = Paths.get("./" + configFolder, "MC_QQ", "config.yml");
         if (!Files.exists(configMapFilePath)) {
-            LOGGER.info("[MC_QQ] 配置文件不存在，将自动生成");
+            LOGGER.info(ConfigConstantMessage.CONFIG_NOT_EXIST);
             try {
                 InputStream inputStream = MCQQ.class.getClassLoader().getResourceAsStream("config.yml");
                 assert inputStream != null;
                 FileUtils.copyInputStreamToFile(inputStream, configMapFilePath.toFile());
             } catch (IOException e) {
-                LOGGER.warn("[MC_QQ] 生成配置文件失败");
+                LOGGER.warn(ConfigConstantMessage.CONFIG_COPY_FIELD);
             }
         }
         try {
@@ -68,20 +69,20 @@ public class Config {
                         if (websocketUrl instanceof String) {
                             websocketUrlList.add((String) websocketUrl);
                         } else {
-                            LOGGER.warn("Non-string websocketUrl found in websocket_url_list: " + websocketUrl);
+                            LOGGER.warn(ConfigConstantMessage.CONFIG_NO_STRING_IN_WEBSOCKET_URL_LIST + websocketUrl);
                         }
                     }
                 } else {
                     websocketUrlList = new ArrayList<>() {{
                         add("ws://127.0.0.1:8080/minecraft/ws");
                     }};
-                    LOGGER.warn("[MC_QQ] websocket_url_list 配置错误，将使用默认配置");
+                    LOGGER.warn(ConfigConstantMessage.CONFIG_WEBSOCKET_URL_LIST_ERROR_USE_DEFAULT);
                 }
             } catch (ClassCastException e) {
                 websocketUrlList = new ArrayList<>() {{
                     add("ws://127.0.0.1:8080/minecraft/ws");
                 }};
-                LOGGER.warn("[MC_QQ] websocket_url_list 配置错误，将使用默认配置");
+                LOGGER.warn(ConfigConstantMessage.CONFIG_WEBSOCKET_URL_LIST_ERROR_USE_DEFAULT);
             }
             sayWay = (String) configMap.get("say_way");
             enableCommandMessage = (boolean) configMap.get("enable_command_message");
@@ -90,7 +91,7 @@ public class Config {
             enableQuitMessage = (boolean) configMap.get("enable_quit_message");
             serverName = (String) configMap.get("server_name");
         } catch (Exception e) {
-            LOGGER.warn("[MC_QQ] 读取配置文件失败，将使用默认配置");
+            LOGGER.warn(ConfigConstantMessage.CONFIG_READING_ERROR);
             enableMcQQ = true;
             enableChatMessage = true;
             enableReconnectMessage = false;
