@@ -8,12 +8,12 @@ version = project.mod_version
 
 java {
     archivesBaseName = "MC_QQ_Forge_${project.minecraft_version}"
-    toolchain.languageVersion = JavaLanguageVersion.of(17)
+    toolchain.languageVersion = JavaLanguageVersion.of(java_version)
 }
 
 minecraft {
 
-    mappings channel: 'official', version: minecraft_version
+    mappings channel: mapping_channel, version: minecraft_version
 
     runs {
         client {
@@ -86,7 +86,7 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${project.forge_version}"
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     annotationProcessor("org.projectlombok:lombok:${project.lombok_version}")
     compileOnly("org.projectlombok:lombok:${project.lombok_version}")
