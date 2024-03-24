@@ -91,6 +91,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${project.lombok_version}")
     compileOnly("org.projectlombok:lombok:${project.lombok_version}")
 
+    implementation files("libs/MC_QQ_Tool-${mcqq_tool_version}.jar")
     implementation files("libs/Java-WebSocket-${java_websocket_version}.jar")
     implementation files("libs/snakeyaml-${snakeyaml_version}.jar")
 }
@@ -99,6 +100,7 @@ dependencies {
 jar {
     from(project.zipTree("libs/snakeyaml-${snakeyaml_version}.jar"))
     from(project.zipTree("libs/Java-WebSocket-${java_websocket_version}.jar"))
+    from(project.zipTree("libs/MC_QQ_Tool-${mcqq_tool_version}.jar"))
     manifest {
         attributes([
                 "Specification-Title"     : "mcqq",
