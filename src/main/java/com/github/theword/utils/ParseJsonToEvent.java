@@ -50,7 +50,6 @@ public class ParseJsonToEvent {
                 ClickEvent clickEvent = new ClickEvent(tempAction, myTextComponent.getClickEvent().getValue());
                 style = style.withClickEvent(clickEvent);
             }
-            // TODO 悬浮事件待完善
             if (myTextComponent.getHoverEvent() != null) {
                 HoverEvent hoverEvent = null;
                 switch (myTextComponent.getHoverEvent().getAction()) {
