@@ -5,7 +5,7 @@
 
 ## 使用
 
-前往适配器的 [Wiki](https://github.com/17TheWord/nonebot-adapter-spigot/wiki)
+前往适配器的 [Wiki](https://github.com/17TheWord/nonebot-adapter-minecraft/wiki)
 
 ## 自行构建
 
