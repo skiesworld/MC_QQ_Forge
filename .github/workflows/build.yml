@@ -10,13 +10,11 @@ name: Build With Gradle
 on:
   push:
     branches:
-      - "dev-*"
+      - "!dev-*"
 
 jobs:
   build:
     runs-on: ubuntu-latest
-#    permissions:
-#      contents: read
 
     steps:
       - uses: actions/checkout@v4
