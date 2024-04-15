@@ -36,4 +36,6 @@ jobs:
         env:
           USERNAME: ${{ github.actor }}
           PACKAGE_READ_AND_WRITE_TOKEN: ${{ secrets.PACKAGE_READ_AND_WRITE_TOKEN }}
-        run: ./gradlew build
+        run: |
+          chmod +x ./gradlew
+          ./gradlew build
