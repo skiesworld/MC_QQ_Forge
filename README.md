@@ -1,6 +1,6 @@
 # MC_QQ_Forge
 
-一个简单的` Forge MOD`，可以通过 [`nonebot-adapter-minecraft`](https://github.com/17TheWord/nonebot-adapter-minecraft)
+一个简单的 `Forge MOD`，可以通过 [`nonebot-adapter-minecraft`](https://github.com/17TheWord/nonebot-adapter-minecraft)
 连接至 [`nonebot2`](https://github.com/nonebot/nonebot2)。
 
 ## 使用
