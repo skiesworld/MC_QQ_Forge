@@ -47,15 +47,19 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     maven {
         url = uri(maven_url)
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.key") ?: System.getenv("PACKAGE_READ_ONLY_TOKEN")
+        }
     }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    implementation "com.github.theword:MC_QQ_Tool:${project.mcqq_tool_version}"
     implementation "org.slf4j:slf4j-api:${project.slf4j_version}"
     compileOnly "org.slf4j:slf4j-simple:${project.slf4j_simple_version}"
+    implementation "com.github.theword.mcqq:mc-qq-tool:${project.mcqq_tool_version}"
 }
 
 tasks.named('processResources', ProcessResources).configure {
