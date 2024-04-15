@@ -83,7 +83,7 @@ jar {
     from {
         configurations.compileClasspath.collect {
             if (
-                    it.name.containsIgnoreCase("mc_qq")
+                    it.name.containsIgnoreCase("mcqq")
                             || it.name.containsIgnoreCase("websocket")
                             || it.name.containsIgnoreCase("snake")
                             || it.name.containsIgnoreCase("slf4j")
