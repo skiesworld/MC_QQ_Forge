@@ -1,4 +1,4 @@
-package com.github.theword;
+package com.github.theword.mcqq;
 
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
