@@ -42,5 +42,4 @@ jobs:
       - name: Push to GitHub Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.ref#refs/heads/ }}
           path: build/libs/
