@@ -37,5 +37,4 @@ jobs:
           USERNAME: ${{ github.actor }}
           PACKAGE_READ_AND_WRITE_TOKEN: ${{ secrets.PACKAGE_READ_AND_WRITE_TOKEN }}
         run: |
-          chmod +x ./gradlew
           ./gradlew build
