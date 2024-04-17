@@ -1,9 +1,9 @@
-package com.github.theword;
+package com.github.theword.mcqq;
 
-import com.github.theword.constant.WebsocketConstantMessage;
-import com.github.theword.utils.Config;
-import com.github.theword.utils.HandleWebsocketMessageService;
-import com.github.theword.websocket.WsClient;
+import com.github.theword.mcqq.utils.HandleWebsocketMessageService;
+import com.github.theword.mcqq.constant.WebsocketConstantMessage;
+import com.github.theword.mcqq.utils.Config;
+import com.github.theword.mcqq.websocket.WsClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,7 +18,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-import static com.github.theword.utils.Tool.*;
+import static com.github.theword.mcqq.utils.Tool.*;
 
 @Mod(MCQQ.MOD_ID)
 public class MCQQ {

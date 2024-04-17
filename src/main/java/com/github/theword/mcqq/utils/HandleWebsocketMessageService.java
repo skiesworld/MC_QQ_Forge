@@ -1,15 +1,16 @@
-package com.github.theword.utils;
+package com.github.theword.mcqq.utils;
 
-import com.github.theword.constant.WebsocketConstantMessage;
-import com.github.theword.returnBody.BaseReturnBody;
-import com.github.theword.returnBody.MessageReturnBody;
+import com.github.theword.mcqq.constant.WebsocketConstantMessage;
+import com.github.theword.mcqq.returnBody.BaseReturnBody;
+import com.github.theword.mcqq.returnBody.MessageReturnBody;
+import com.github.theword.mcqq.utils.HandleWebsocketMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
-import static com.github.theword.MCQQ.minecraftServer;
-import static com.github.theword.utils.Tool.logger;
+import static com.github.theword.mcqq.MCQQ.minecraftServer;
+import static com.github.theword.mcqq.utils.Tool.logger;
 
 public class HandleWebsocketMessageService implements HandleWebsocketMessage {
 

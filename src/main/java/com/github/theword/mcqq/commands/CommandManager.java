@@ -1,4 +1,4 @@
-package com.github.theword.commands;
+package com.github.theword.mcqq.commands;
 
 import java.util.ArrayList;
 import java.util.List;
