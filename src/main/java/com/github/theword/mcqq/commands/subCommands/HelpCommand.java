@@ -1,13 +1,13 @@
-package com.github.theword.commands.subCommands;
+package com.github.theword.mcqq.commands.subCommands;
 
-import com.github.theword.commands.SubCommand;
+import com.github.theword.mcqq.commands.CommandManager;
+import com.github.theword.mcqq.commands.SubCommand;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 
-import static com.github.theword.CommandTool.sendResultComponent;
-import static com.github.theword.commands.CommandManager.subCommandList;
+import static com.github.theword.mcqq.CommandTool.sendResultComponent;
 
 public class HelpCommand extends SubCommand {
     @Override
@@ -36,7 +36,7 @@ public class HelpCommand extends SubCommand {
                 .executes(
                         context -> {
                             sendResultComponent(context, "-------------------");
-                            for (SubCommand subCommand : subCommandList) {
+                            for (SubCommand subCommand : CommandManager.subCommandList) {
                                 sendResultComponent(context, subCommand.getUsage() + "---" + subCommand.getDescription());
                             }
                             sendResultComponent(context, "-------------------");
