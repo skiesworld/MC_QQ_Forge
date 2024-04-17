@@ -1,7 +1,7 @@
-package com.github.theword.commands.subCommands;
+package com.github.theword.mcqq.commands.subCommands;
 
-import com.github.theword.commands.SubCommand;
-import com.github.theword.constant.CommandConstantMessage;
+import com.github.theword.mcqq.commands.SubCommand;
+import com.github.theword.mcqq.constant.CommandConstantMessage;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
@@ -9,8 +9,8 @@ import net.minecraft.commands.Commands;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.github.theword.CommandTool.sendResultComponent;
-import static com.github.theword.utils.Tool.wsClientList;
+import static com.github.theword.mcqq.CommandTool.sendResultComponent;
+import static com.github.theword.mcqq.utils.Tool.wsClientList;
 
 public class ReconnectCommand extends SubCommand {
     @Override

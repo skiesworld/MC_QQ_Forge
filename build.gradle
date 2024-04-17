@@ -55,6 +55,10 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     maven {
         url = uri(maven_url)
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.key") ?: System.getenv("PACKAGE_READ_ONLY_TOKEN")
+        }
     }
 }
 
@@ -63,7 +67,7 @@ dependencies {
 
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
     implementation "org.projectlombok:lombok:${project.lombok_version}"
-    implementation "com.github.theword:MC_QQ_Tool:${project.mcqq_tool_version}"
+    implementation "com.github.theword.mcqq:mc-qq-tool:${project.mcqq_tool_version}"
 }
 
 tasks.named('processResources', ProcessResources).configure {
@@ -85,7 +89,7 @@ tasks.named('processResources', ProcessResources).configure {
 jar {
     from {
         configurations.compileClasspath.collect {
-            if (it.name.containsIgnoreCase("mc_qq") || it.name.containsIgnoreCase("websocket") || it.name.containsIgnoreCase("snake")) {
+            if (it.name.containsIgnoreCase("mcqq") || it.name.containsIgnoreCase("websocket") || it.name.containsIgnoreCase("snake")) {
                 zipTree(it)
             }
         }

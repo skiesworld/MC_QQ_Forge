@@ -1,9 +1,9 @@
-package com.github.theword.utils;
+package com.github.theword.mcqq.utils;
 
-import com.github.theword.returnBody.returnModle.MyBaseComponent;
-import com.github.theword.returnBody.returnModle.MyHoverEntity;
-import com.github.theword.returnBody.returnModle.MyHoverItem;
-import com.github.theword.returnBody.returnModle.MyTextComponent;
+import com.github.theword.mcqq.returnBody.returnModle.MyBaseComponent;
+import com.github.theword.mcqq.returnBody.returnModle.MyHoverEntity;
+import com.github.theword.mcqq.returnBody.returnModle.MyHoverItem;
+import com.github.theword.mcqq.returnBody.returnModle.MyTextComponent;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
