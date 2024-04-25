@@ -86,7 +86,7 @@ tasks.named('processResources', ProcessResources).configure {
 jar {
     from {
         configurations.compileClasspath.collect {
-            if (it.name.containsIgnoreCase("mcqq") || it.name.containsIgnoreCase("websocket") || it.name.containsIgnoreCase("snake")) {
+            if (it.name.containsIgnoreCase("mc-qq-tool") || it.name.containsIgnoreCase("websocket") || it.name.containsIgnoreCase("snake")) {
                 zipTree(it)
             }
         }
