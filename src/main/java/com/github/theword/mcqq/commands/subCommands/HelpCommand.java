@@ -1,49 +1,33 @@
 package com.github.theword.mcqq.commands.subCommands;
 
-import com.github.theword.mcqq.commands.CommandManager;
-import com.github.theword.mcqq.commands.SubCommand;
+import com.github.theword.mcqq.commands.ForgeSubCommand;
+import com.github.theword.mcqq.commands.subCommands.client.ReconnectCommand;
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
 
-import static com.github.theword.mcqq.CommandTool.sendResultComponent;
+import java.util.ArrayList;
+import java.util.List;
 
-public class HelpCommand extends SubCommand {
-    @Override
-    public String getName() {
-        return "mcqq";
+import static com.github.theword.mcqq.utils.Tool.handleCommandReturnMessage;
+
+public class HelpCommand extends HelpCommandAbstract implements ForgeSubCommand {
+    private final List<ForgeSubCommand> subCommandList = new ArrayList<>();
+
+    public HelpCommand() {
+        subCommandList.add(new HelpCommand());
+        subCommandList.add(new ReloadCommand());
+        subCommandList.add(new ReconnectCommand());
     }
 
     @Override
-    public String getDescription() {
-        return "查看 MC_QQ 命令";
-    }
-
-    @Override
-    public String getSyntax() {
-        return "/mcqq";
-    }
-
-    @Override
-    public String getUsage() {
-        return "使用：/mcqq";
-    }
-
-    public HelpCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("mcqq")
-                .requires(source -> source.hasPermission(2))
-                .executes(
-                        context -> {
-                            sendResultComponent(context, "-------------------");
-                            for (SubCommand subCommand : CommandManager.subCommandList) {
-                                sendResultComponent(context, subCommand.getUsage() + "---" + subCommand.getDescription());
-                            }
-                            sendResultComponent(context, "-------------------");
-                            return Command.SINGLE_SUCCESS;
-                        }
-                )
-        );
+    public int onCommand(CommandContext<CommandSourceStack> context) {
+        handleCommandReturnMessage.handleCommandReturnMessage(context, "-------------------");
+        for (ForgeSubCommand forgeSubCommand : subCommandList) {
+            handleCommandReturnMessage.handleCommandReturnMessage(context, forgeSubCommand.getUsage() + "---" + forgeSubCommand.getDescription());
+        }
+        handleCommandReturnMessage.handleCommandReturnMessage(context, "-------------------");
+        return Command.SINGLE_SUCCESS;
 
     }
 }
