@@ -9,8 +9,10 @@ name: Build With Gradle
 
 on:
   push:
-    branches-ignore: 
+    branches-ignore:
       - "dev-*"
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   build:
@@ -38,6 +40,7 @@ jobs:
           ./gradlew build
 
       - name: Push to GitHub Artifacts
+        if: github.event_name == 'push'
         uses: actions/upload-artifact@v4
         with:
           path: build/libs/
