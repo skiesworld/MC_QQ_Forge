@@ -1,4 +1,4 @@
-package com.github.theword.mcqq.commands.subCommands;
+package com.github.theword.mcqq.commands.subCommands.client;
 
 import com.github.theword.mcqq.commands.ForgeSubCommand;
 import com.mojang.brigadier.Command;
@@ -7,12 +7,12 @@ import net.minecraft.commands.CommandSourceStack;
 
 import static com.github.theword.mcqq.utils.Tool.websocketManager;
 
-
-public class ReloadCommand extends ReloadCommandAbstract implements ForgeSubCommand {
+public class ReconnectCommand extends ReconnectCommandAbstract implements ForgeSubCommand {
 
     @Override
     public int onCommand(CommandContext<CommandSourceStack> context) {
-        websocketManager.reloadWebsocket(true, context);
+        websocketManager.reconnectWebsocketClients(false, context);
         return Command.SINGLE_SUCCESS;
     }
+
 }
