@@ -59,6 +59,8 @@ dependencies {
 
     implementation "org.slf4j:slf4j-api:${project.slf4j_version}"
     compileOnly "org.slf4j:slf4j-simple:${project.slf4j_simple_version}"
+    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
+    implementation "org.projectlombok:lombok:${project.lombok_version}"
     implementation "com.github.theword.mcqq:mc-qq-tool:${project.mcqq_tool_version}"
 }
 
