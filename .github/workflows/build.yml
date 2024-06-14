@@ -21,6 +21,8 @@ jobs:
     env:
       BUILD_DIR: build/libs/
       JAR_PATTERN: MC_QQ_*.jar
+      MCQQ_TOOL_VERSION: ${{ vars.MCQQ_TOOL_VERSION }}
+      MC_QQ_VERSION: ${{ vars.MC_QQ_VERSION }}
 
     steps:
       - uses: actions/checkout@v4
