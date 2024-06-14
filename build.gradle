@@ -6,7 +6,7 @@ plugins {
 
 
 group = mod_group_id
-version = mod_version
+version = System.getenv("MC_QQ_VERSION") ?: project.findProperty("mod_version")
 
 base {
     archivesName = "${mod_name}_${minecraft_version}"
@@ -15,6 +15,16 @@ base {
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(java_version)
 }
+
+ext {
+    lombok_version = System.getenv("LOMBOK_VERSION") ?: project.findProperty("lombok_version")
+    java_websocket_version = System.getenv("JAVA_WEBSOCKET_VERSION") ?: project.findProperty("java_websocket_version")
+    mcqq_tool_version = System.getenv("MCQQ_TOOL_VERSION") ?: project.findProperty("mcqq_tool_version")
+    snakeyaml_version = System.getenv("SNAKEYAML_VERSION") ?: project.findProperty("snakeyaml_version")
+    slf4j_version = System.getenv("SLF4J_VERSION") ?: project.findProperty("slf4j_version")
+    slf4j_simple_version = System.getenv("SLF4J_SIMPLE_VERSION") ?: project.findProperty("slf4j_simple_version")
+}
+
 
 minecraft {
     mappings channel: mapping_channel, version: mapping_version
@@ -57,11 +67,11 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    implementation "org.slf4j:slf4j-api:${project.slf4j_version}"
-    compileOnly "org.slf4j:slf4j-simple:${project.slf4j_simple_version}"
-    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
-    implementation "org.projectlombok:lombok:${project.lombok_version}"
-    implementation "com.github.theword.mcqq:mc-qq-tool:${project.mcqq_tool_version}"
+    implementation "org.slf4j:slf4j-api:${slf4j_version}"
+    compileOnly "org.slf4j:slf4j-simple:${slf4j_simple_version}"
+    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+    implementation "org.projectlombok:lombok:${lombok_version}"
+    implementation "com.github.theword.mcqq:mc-qq-tool:${mcqq_tool_version}"
 }
 
 tasks.named('processResources', ProcessResources).configure {
