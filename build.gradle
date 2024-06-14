@@ -18,9 +18,7 @@ java {
 
 ext {
     lombok_version = System.getenv("LOMBOK_VERSION") ?: project.findProperty("lombok_version")
-    java_websocket_version = System.getenv("JAVA_WEBSOCKET_VERSION") ?: project.findProperty("java_websocket_version")
     mcqq_tool_version = System.getenv("MCQQ_TOOL_VERSION") ?: project.findProperty("mcqq_tool_version")
-    snakeyaml_version = System.getenv("SNAKEYAML_VERSION") ?: project.findProperty("snakeyaml_version")
     slf4j_version = System.getenv("SLF4J_VERSION") ?: project.findProperty("slf4j_version")
     slf4j_simple_version = System.getenv("SLF4J_SIMPLE_VERSION") ?: project.findProperty("slf4j_simple_version")
 }
