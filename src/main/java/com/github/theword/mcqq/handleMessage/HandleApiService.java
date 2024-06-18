@@ -3,9 +3,18 @@ package com.github.theword.mcqq.handleMessage;
 import com.github.theword.mcqq.returnBody.ActionbarReturnBody;
 import com.github.theword.mcqq.returnBody.MessageReturnBody;
 import com.github.theword.mcqq.returnBody.SendTitleReturnBody;
+import com.github.theword.mcqq.returnBody.returnModle.MyBaseComponent;
+import com.github.theword.mcqq.returnBody.returnModle.SendTitle;
 import com.github.theword.mcqq.utils.ParseJsonToEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.LiteralContents;
+import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
 import net.minecraft.server.level.ServerPlayer;
+
+import java.util.List;
 
 import static com.github.theword.mcqq.MCQQ.minecraftServer;
 import static com.github.theword.mcqq.utils.Tool.logger;
@@ -33,8 +42,13 @@ public class HandleApiService implements HandleApi {
      */
     @Override
     public void handleSendTitleMessage(SendTitleReturnBody sendTitleReturnBody) {
-        // TODO Send Title Message
-        logger.warn("暂未实现 Send Title Message");
+        SendTitle sendTitle = sendTitleReturnBody.getSendTitle();
+        for (ServerPlayer serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
+            serverPlayer.connection.send(new ClientboundSetTitleTextPacket(MutableComponent.create(new LiteralContents(sendTitle.getTitle()))));
+            if (sendTitle.getSubtitle() != null)
+                serverPlayer.connection.send(new ClientboundSetSubtitleTextPacket(MutableComponent.create(new LiteralContents(sendTitle.getSubtitle()))));
+            serverPlayer.connection.send(new ClientboundSetTitlesAnimationPacket(sendTitle.getFadein(), sendTitle.getStay(), sendTitle.getFadeout()));
+        }
     }
 
     /**
@@ -44,7 +58,10 @@ public class HandleApiService implements HandleApi {
      */
     @Override
     public void handleActionBarMessage(ActionbarReturnBody actionbarReturnBody) {
-        // TODO Action Bar Message
-        logger.warn("暂未实现 Action Bar Message");
+        List<MyBaseComponent> messageList = actionbarReturnBody.getMessageList();
+        MutableComponent mutableComponent = parseJsonToEvent.parseMessages(messageList);
+        for (ServerPlayer serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
+            serverPlayer.connection.send(new ClientboundSetActionBarTextPacket(mutableComponent));
+        }
     }
 }
