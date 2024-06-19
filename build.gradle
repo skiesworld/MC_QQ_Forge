@@ -2,6 +2,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
+    id 'checkstyle'
 }
 
 
@@ -23,6 +24,10 @@ ext {
     slf4j_simple_version = System.getenv("SLF4J_SIMPLE_VERSION") ?: project.findProperty("slf4j_simple_version")
 }
 
+checkstyle {
+    toolVersion = "8.44"
+    configFile = file("${rootDir}/checkstyle.xml")
+}
 
 minecraft {
     mappings channel: mapping_channel, version: mapping_version
