@@ -17,9 +17,8 @@ import java.util.UUID;
 
 public class ParseJsonToEvent {
     public MutableComponent parseMessages(List<? extends MyBaseComponent> myBaseComponentList) {
-        MutableComponent mutableComponent = parsePerMessageToMultiText(myBaseComponentList.get(0));
-        for (int i = 1; i < myBaseComponentList.size(); i++) {
-            MyBaseComponent myBaseComponent = myBaseComponentList.get(i);
+        MutableComponent mutableComponent = parsePerMessageToMultiText(Tool.getPrefixComponent());
+        for (MyBaseComponent myBaseComponent : myBaseComponentList) {
             MutableComponent tempMutableComponent = parsePerMessageToMultiText(myBaseComponent);
             mutableComponent.append(tempMutableComponent);
         }
