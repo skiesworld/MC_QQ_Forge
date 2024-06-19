@@ -5,6 +5,7 @@ import com.github.theword.mcqq.returnBody.returnModle.MyTextComponent;
 import com.github.theword.mcqq.returnBody.returnModle.SendTitle;
 import com.github.theword.mcqq.utils.ParseJsonToEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
@@ -41,12 +42,10 @@ public class HandleApiService implements HandleApi {
      */
     @Override
     public void handleSendTitleMessage(WebSocket webSocket, SendTitle sendTitle) {
-        for (ServerPlayer serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
-            serverPlayer.connection.send(new ClientboundSetTitleTextPacket(parseJsonToEvent.parseMessages(sendTitle.getTitle())));
-            if (sendTitle.getSubtitle() != null)
-                serverPlayer.connection.send(new ClientboundSetSubtitleTextPacket(parseJsonToEvent.parseMessages(sendTitle.getSubtitle())));
-            serverPlayer.connection.send(new ClientboundSetTitlesAnimationPacket(sendTitle.getFadein(), sendTitle.getStay(), sendTitle.getFadeout()));
-        }
+        sendPacket(new ClientboundSetTitleTextPacket(parseJsonToEvent.parseMessages(sendTitle.getTitle())));
+        if (sendTitle.getSubtitle() != null)
+            sendPacket(new ClientboundSetSubtitleTextPacket(parseJsonToEvent.parseMessages(sendTitle.getSubtitle())));
+        sendPacket(new ClientboundSetTitlesAnimationPacket(sendTitle.getFadein(), sendTitle.getStay(), sendTitle.getFadeout()));
     }
 
     /**
@@ -57,9 +56,12 @@ public class HandleApiService implements HandleApi {
      */
     @Override
     public void handleActionBarMessage(WebSocket webSocket, List<MyBaseComponent> messageList) {
-        MutableComponent mutableComponent = parseJsonToEvent.parseMessages(messageList);
+        sendPacket(new ClientboundSetActionBarTextPacket(parseJsonToEvent.parseMessages(messageList)));
+    }
+
+    private void sendPacket(Packet<?> packet) {
         for (ServerPlayer serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
-            serverPlayer.connection.send(new ClientboundSetActionBarTextPacket(mutableComponent));
+            serverPlayer.connection.send(packet);
         }
     }
 }
