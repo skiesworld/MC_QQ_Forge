@@ -31,8 +31,9 @@ public class HandleApiService implements HandleApi {
     public void handleBroadcastMessage(WebSocket webSocket, List<MyTextComponent> messageList) {
         StringTextComponent textComponent = parseJsonToEvent.parsePerMessageToMultiText(Tool.getPrefixComponent());
         textComponent.append(parseJsonToEvent.parseMessages(messageList));
+        UUID uuid = UUID.randomUUID();
         for (ServerPlayerEntity serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
-            serverPlayer.sendMessage(textComponent, UUID.randomUUID());
+            serverPlayer.sendMessage(textComponent, uuid);
         }
     }
 
