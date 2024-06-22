@@ -56,7 +56,7 @@ public class ParseJsonToEvent {
                 HoverEvent hoverEvent = null;
                 switch (myTextComponent.getHoverEvent().getAction()) {
                     case "show_text":
-                        if (myTextComponent.getHoverEvent().getBaseComponentList() != null && myTextComponent.getHoverEvent().getBaseComponentList().size() > 0) {
+                        if (myTextComponent.getHoverEvent().getBaseComponentList() != null && !myTextComponent.getHoverEvent().getBaseComponentList().isEmpty()) {
                             StringTextComponent textComponent = parseMessages(myTextComponent.getHoverEvent().getBaseComponentList());
                             hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, textComponent);
                         }
@@ -72,7 +72,7 @@ public class ParseJsonToEvent {
                         MyHoverEntity myHoverEntity = myTextComponent.getHoverEvent().getEntity();
                         Optional<EntityType<?>> entityType = EntityType.byString(myHoverEntity.getType());
                         if (entityType.isPresent()) {
-                            HoverEvent.EntityHover entityTooltipInfo = new HoverEvent.EntityHover(entityType.get(), UUID.randomUUID(), new StringTextComponent(getText(myHoverEntity.getName())));
+                            HoverEvent.EntityHover entityTooltipInfo = new HoverEvent.EntityHover(entityType.get(), UUID.randomUUID(), parseMessages(myHoverEntity.getName()));
                             hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ENTITY, entityTooltipInfo);
                         }
                         break;
@@ -85,13 +85,5 @@ public class ParseJsonToEvent {
 //        stringTextComponent.setStyle(style);
 
         return stringTextComponent;
-    }
-
-    String getText(List<? extends MyBaseComponent> myBaseComponents) {
-        StringBuilder temp = new StringBuilder();
-        for (MyBaseComponent myBaseComponent : myBaseComponents) {
-            temp.append(myBaseComponent.getText());
-        }
-        return temp.toString();
     }
 }
