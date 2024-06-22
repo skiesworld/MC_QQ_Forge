@@ -15,18 +15,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class ParseJsonToEvent {
-    public MutableComponent parseMessages(List<? extends MyBaseComponent> myBaseComponentList) {
-        MutableComponent mutableComponent = parsePerMessageToMultiText(myBaseComponentList.get(0));
-        for (int i = 1; i < myBaseComponentList.size(); i++) {
-            MyBaseComponent myBaseComponent = myBaseComponentList.get(i);
-            MutableComponent tempMutableComponent = parsePerMessageToMultiText(myBaseComponent);
-            mutableComponent.append(tempMutableComponent);
+    public TextComponent parseMessages(List<? extends MyBaseComponent> myBaseComponentList) {
+        TextComponent textComponent = new TextComponent("");
+        for (MyBaseComponent myBaseComponent : myBaseComponentList) {
+            TextComponent tempTextComponent = parsePerMessageToMultiText(myBaseComponent);
+            textComponent.append(tempTextComponent);
         }
-        return mutableComponent;
+        return textComponent;
     }
 
-    public MutableComponent parsePerMessageToMultiText(MyBaseComponent myBaseComponent) {
-        TextComponent stringTextComponent = new TextComponent(myBaseComponent.getText());
+    public TextComponent parsePerMessageToMultiText(MyBaseComponent myBaseComponent) {
+        TextComponent textComponent = new TextComponent(myBaseComponent.getText());
 
         ResourceLocation font = null;
         if (myBaseComponent.getFont() != null) {
@@ -54,8 +53,8 @@ public class ParseJsonToEvent {
                 switch (myTextComponent.getHoverEvent().getAction()) {
                     case "show_text" -> {
                         if (myTextComponent.getHoverEvent().getBaseComponentList() != null && !myTextComponent.getHoverEvent().getBaseComponentList().isEmpty()) {
-                            MutableComponent textComponent = parseMessages(myTextComponent.getHoverEvent().getBaseComponentList());
-                            hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, textComponent);
+                            TextComponent hoverTextComponent = parseMessages(myTextComponent.getHoverEvent().getBaseComponentList());
+                            hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverTextComponent);
                         }
                     }
                     case "show_item" -> {
@@ -69,7 +68,7 @@ public class ParseJsonToEvent {
                         MyHoverEntity myHoverEntity = myTextComponent.getHoverEvent().getEntity();
                         Optional<EntityType<?>> entityType = EntityType.byString(myHoverEntity.getType());
                         if (entityType.isPresent()) {
-                            HoverEvent.EntityTooltipInfo entityTooltipInfo = new HoverEvent.EntityTooltipInfo(entityType.get(), UUID.randomUUID(), new TextComponent(getText(myHoverEntity.getName())));
+                            HoverEvent.EntityTooltipInfo entityTooltipInfo = new HoverEvent.EntityTooltipInfo(entityType.get(), UUID.randomUUID(), parseMessages(myHoverEntity.getName()));
                             hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ENTITY, entityTooltipInfo);
                         }
                     }
@@ -79,15 +78,7 @@ public class ParseJsonToEvent {
                 style = style.withHoverEvent(hoverEvent);
             }
         }
-        stringTextComponent.setStyle(style);
-        return stringTextComponent;
-    }
-
-    String getText(List<? extends MyBaseComponent> myBaseComponents) {
-        StringBuilder temp = new StringBuilder();
-        for (MyBaseComponent myBaseComponent : myBaseComponents) {
-            temp.append(myBaseComponent.getText());
-        }
-        return temp.toString();
+        textComponent.setStyle(style);
+        return textComponent;
     }
 }
