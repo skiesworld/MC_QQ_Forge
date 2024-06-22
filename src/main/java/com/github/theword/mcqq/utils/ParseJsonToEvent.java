@@ -34,8 +34,7 @@ public class ParseJsonToEvent {
             font = new ResourceLocation(myBaseComponent.getFont());
         }
         // TODO net.minecraft.util.text: no class found, fix!
-//        Style style = Style.EMPTY.
-//                withColor(Color.parseColor(myBaseComponent.getColor()))
+//        Style style = Style.EMPTY
 //                .withBold(myBaseComponent.isBold())
 //                .withItalic(myBaseComponent.isItalic())
 //                .withUnderlined(myBaseComponent.isUnderlined())
@@ -43,6 +42,10 @@ public class ParseJsonToEvent {
 //                .setObfuscated(myBaseComponent.isObfuscated())
 //                .withInsertion(myBaseComponent.getInsertion())
 //                .withFont(font);
+//        if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty()) {
+//            style.withColor(Color.parseColor(myBaseComponent.getColor()));
+//
+//        }
 
         if (myBaseComponent instanceof MyTextComponent) {
             MyTextComponent myTextComponent = (MyTextComponent) myBaseComponent;
