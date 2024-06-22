@@ -32,8 +32,7 @@ public class ParseJsonToEvent {
             font = new ResourceLocation(myBaseComponent.getFont());
         }
 
-        Style style = Style.EMPTY.
-                withColor(TextColor.parseColor(myBaseComponent.getColor()))
+        Style style = Style.EMPTY
                 .withBold(myBaseComponent.isBold())
                 .withItalic(myBaseComponent.isItalic())
                 .withUnderlined(myBaseComponent.isUnderlined())
@@ -41,6 +40,9 @@ public class ParseJsonToEvent {
                 .withObfuscated(myBaseComponent.isObfuscated())
                 .withInsertion(myBaseComponent.getInsertion())
                 .withFont(font);
+        if (myBaseComponent.getColor() != null && myBaseComponent.getColor().isEmpty()) {
+            style = style.withColor(TextColor.parseColor(myBaseComponent.getColor()));
+        }
 
         if (myBaseComponent instanceof MyTextComponent myTextComponent) {
             if (myTextComponent.getClickEvent() != null) {
