@@ -1,0 +1,43 @@
+# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
+# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
+
+name: CheckStyle
+
+on:
+  pull_request:
+    types: [ opened, synchronize ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17 for Shared Runner
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+          settings-path: ${{ github.workspace }} # location for the settings.xml file
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5
+
+      - name: Check Style Main
+        env:
+          USERNAME: ${{ github.actor }}
+          PACKAGE_READ_ONLY_TOKEN: ${{ secrets.PACKAGE_READ_ONLY_TOKEN }}
+        run: |
+          ./gradlew checkstyleMain
+
+      - name: Check Style Test
+        env:
+          USERNAME: ${{ github.actor }}
+          PACKAGE_READ_ONLY_TOKEN: ${{ secrets.PACKAGE_READ_ONLY_TOKEN }}
+        run: |
+          ./gradlew checkstyleTest
