@@ -18,9 +18,8 @@ import java.util.UUID;
 
 public class ParseJsonToEvent {
     public StringTextComponent parseMessages(List<? extends MyBaseComponent> myBaseComponentList) {
-        StringTextComponent mutableComponent = parsePerMessageToMultiText(myBaseComponentList.get(0));
-        for (int i = 1; i < myBaseComponentList.size(); i++) {
-            MyBaseComponent myBaseComponent = myBaseComponentList.get(i);
+        StringTextComponent mutableComponent = new StringTextComponent("");
+        for (MyBaseComponent myBaseComponent : myBaseComponentList) {
             StringTextComponent tempMutableComponent = parsePerMessageToMultiText(myBaseComponent);
             mutableComponent.append(tempMutableComponent);
         }
@@ -35,8 +34,7 @@ public class ParseJsonToEvent {
             font = new ResourceLocation(myBaseComponent.getFont());
         }
         // TODO net.minecraft.util.text: no class found, fix!
-//        Style style = Style.EMPTY.
-//                withColor(Color.parseColor(myBaseComponent.getColor()))
+//        Style style = Style.EMPTY
 //                .withBold(myBaseComponent.isBold())
 //                .withItalic(myBaseComponent.isItalic())
 //                .withUnderlined(myBaseComponent.isUnderlined())
@@ -44,6 +42,9 @@ public class ParseJsonToEvent {
 //                .setObfuscated(myBaseComponent.isObfuscated())
 //                .withInsertion(myBaseComponent.getInsertion())
 //                .withFont(font);
+//        if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty())
+//            style.withColor(Color.parseColor(myBaseComponent.getColor()));
+//        else style.withColor(Color.parseColor("white"));
 
         if (myBaseComponent instanceof MyTextComponent) {
             MyTextComponent myTextComponent = (MyTextComponent) myBaseComponent;
@@ -57,7 +58,7 @@ public class ParseJsonToEvent {
                 HoverEvent hoverEvent = null;
                 switch (myTextComponent.getHoverEvent().getAction()) {
                     case "show_text":
-                        if (myTextComponent.getHoverEvent().getBaseComponentList() != null && myTextComponent.getHoverEvent().getBaseComponentList().size() > 0) {
+                        if (myTextComponent.getHoverEvent().getBaseComponentList() != null && !myTextComponent.getHoverEvent().getBaseComponentList().isEmpty()) {
                             StringTextComponent textComponent = parseMessages(myTextComponent.getHoverEvent().getBaseComponentList());
                             hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, textComponent);
                         }
@@ -73,7 +74,7 @@ public class ParseJsonToEvent {
                         MyHoverEntity myHoverEntity = myTextComponent.getHoverEvent().getEntity();
                         Optional<EntityType<?>> entityType = EntityType.byString(myHoverEntity.getType());
                         if (entityType.isPresent()) {
-                            HoverEvent.EntityHover entityTooltipInfo = new HoverEvent.EntityHover(entityType.get(), UUID.randomUUID(), new StringTextComponent(getText(myHoverEntity.getName())));
+                            HoverEvent.EntityHover entityTooltipInfo = new HoverEvent.EntityHover(entityType.get(), UUID.randomUUID(), parseMessages(myHoverEntity.getName()));
                             hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ENTITY, entityTooltipInfo);
                         }
                         break;
@@ -86,13 +87,5 @@ public class ParseJsonToEvent {
 //        stringTextComponent.setStyle(style);
 
         return stringTextComponent;
-    }
-
-    String getText(List<? extends MyBaseComponent> myBaseComponents) {
-        StringBuilder temp = new StringBuilder();
-        for (MyBaseComponent myBaseComponent : myBaseComponents) {
-            temp.append(myBaseComponent.getText());
-        }
-        return temp.toString();
     }
 }
