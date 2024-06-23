@@ -42,7 +42,8 @@ public class ParseJsonToEvent {
                 .withInsertion(myBaseComponent.getInsertion())
                 .withFont(font);
         if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty())
-            style.withColor(TextColor.parseColor(myBaseComponent.getColor()));
+            style = style.withColor(TextColor.parseColor(myBaseComponent.getColor()));
+        else style = style.withColor(TextColor.parseColor("white"));
 
         if (myBaseComponent instanceof MyTextComponent myTextComponent) {
             if (myTextComponent.getClickEvent() != null) {
