@@ -1,0 +1,13 @@
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+<module name="Checker">
+    <module name="TreeWalker">
+        <module name="TypeName"/>
+        <module name="EmptyBlock"/>
+        <module name="MemberName"/>
+        <module name="MethodName"/>
+        <module name="ConstantName"/>
+        <module name="JavadocMethod"/>
+    </module>
+    <property name="charset" value="UTF-8"/>
+</module>
