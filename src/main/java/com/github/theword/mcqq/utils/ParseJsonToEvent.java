@@ -42,10 +42,9 @@ public class ParseJsonToEvent {
 //                .setObfuscated(myBaseComponent.isObfuscated())
 //                .withInsertion(myBaseComponent.getInsertion())
 //                .withFont(font);
-//        if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty()) {
+//        if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty())
 //            style.withColor(Color.parseColor(myBaseComponent.getColor()));
-//
-//        }
+//        else style.withColor(Color.parseColor("white"));
 
         if (myBaseComponent instanceof MyTextComponent) {
             MyTextComponent myTextComponent = (MyTextComponent) myBaseComponent;
