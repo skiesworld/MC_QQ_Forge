@@ -3,7 +3,7 @@ package com.github.theword.mcqq.handleMessage;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.LiteralContents;
+import net.minecraft.network.chat.contents.PlainTextContents.LiteralContents;
 
 public class HandleCommandReturnMessageService implements HandleCommandReturnMessage {
 

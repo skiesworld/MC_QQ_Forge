@@ -5,7 +5,7 @@ import com.github.theword.mcqq.returnBody.returnModle.MyHoverEntity;
 import com.github.theword.mcqq.returnBody.returnModle.MyHoverItem;
 import com.github.theword.mcqq.returnBody.returnModle.MyTextComponent;
 import net.minecraft.network.chat.*;
-import net.minecraft.network.chat.contents.LiteralContents;
+import net.minecraft.network.chat.contents.PlainTextContents.LiteralContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -30,7 +30,7 @@ public class ParseJsonToEvent {
 
         ResourceLocation font = null;
         if (myBaseComponent.getFont() != null) {
-            font = new ResourceLocation(myBaseComponent.getFont());
+            font = ResourceLocation.parse(myBaseComponent.getFont());
         }
 
         Style style = Style.EMPTY
@@ -41,13 +41,13 @@ public class ParseJsonToEvent {
                 .withObfuscated(myBaseComponent.isObfuscated())
                 .withInsertion(myBaseComponent.getInsertion())
                 .withFont(font);
-        if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty()) {
-            style = style.withColor(TextColor.parseColor(myBaseComponent.getColor()));
-        }
+        if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty())
+            style = style.withColor(TextColor.parseColor(myBaseComponent.getColor()).getOrThrow());
+        else style = style.withColor(TextColor.parseColor("white").getOrThrow());
 
         if (myBaseComponent instanceof MyTextComponent myTextComponent) {
             if (myTextComponent.getClickEvent() != null) {
-                ClickEvent.Action tempAction = ClickEvent.Action.getByName(myTextComponent.getClickEvent().getAction());
+                ClickEvent.Action tempAction = ClickEvent.Action.valueOf(myTextComponent.getClickEvent().getAction());
                 ClickEvent clickEvent = new ClickEvent(tempAction, myTextComponent.getClickEvent().getValue());
                 style = style.withClickEvent(clickEvent);
             }
