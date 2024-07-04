@@ -2,16 +2,12 @@ package com.github.theword.mcqq;
 
 
 import com.github.theword.mcqq.eventModels.forge.*;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.Objects;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import static com.github.theword.mcqq.utils.Tool.config;
 import static com.github.theword.mcqq.utils.Tool.sendMessage;
@@ -27,17 +23,17 @@ public class EventProcessor {
     }
 
     @SubscribeEvent
-    public void onPlayerJoin(PlayerLoggedInEvent event) {
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         if (config.isEnableJoinMessage() && !event.isCanceled()) {
-            ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(getPlayer((ServerPlayerEntity) event.getEntity()));
+            ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(getPlayer((EntityPlayerMP) event.player));
             sendMessage(forgePlayerLoggedInEvent);
         }
     }
 
     @SubscribeEvent
-    public void onPlayerQuit(PlayerLoggedOutEvent event) {
+    public void onPlayerQuit(PlayerEvent.PlayerLoggedOutEvent event) {
         if (config.isEnableQuitMessage() && !event.isCanceled()) {
-            ForgePlayerLoggedOutEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedOutEvent(getPlayer((ServerPlayerEntity) event.getEntity()));
+            ForgePlayerLoggedOutEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedOutEvent(getPlayer((EntityPlayerMP) event.player));
             sendMessage(forgePlayerLoggedInEvent);
         }
     }
@@ -45,11 +41,11 @@ public class EventProcessor {
     @SubscribeEvent
     public void onPlayerCommand(CommandEvent event) {
         if (config.isEnableCommandMessage() && !event.isCanceled()) {
-            if (event.getParseResults().getContext().getSource().getEntity() instanceof ServerPlayerEntity) {
-                String command = event.getParseResults().getReader().getString();
+            if (event.getSender().getCommandSenderEntity() instanceof EntityPlayerMP) {
+                String command = event.getCommand().toString();
 
                 if (!command.startsWith("l ") && !command.startsWith("login ") && !command.startsWith("register ") && !command.startsWith("reg ") && !command.startsWith("mcqq ")) {
-                    ForgeServerPlayer player = getPlayer((ServerPlayerEntity) Objects.requireNonNull(event.getParseResults().getContext().getSource().getEntity()));
+                    ForgeServerPlayer player = getPlayer((EntityPlayerMP) event.getSender().getCommandSenderEntity());
                     ForgeCommandEvent forgeCommandEvent = new ForgeCommandEvent("", player, command);
                     sendMessage(forgeCommandEvent);
                 }
@@ -60,33 +56,34 @@ public class EventProcessor {
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent event) {
         if (config.isEnableDeathMessage() && !event.isCanceled()) {
-            if (event.getEntity() instanceof ServerPlayerEntity) {
-                ForgeServerPlayer player = getPlayer((ServerPlayerEntity) event.getEntity());
-                ForgePlayerDeathEvent forgeCommandEvent = new ForgePlayerDeathEvent("", player, event.getSource().getLocalizedDeathMessage((LivingEntity) event.getEntity()).getString());
+            if (event.getEntity() instanceof EntityPlayerMP) {
+                ForgeServerPlayer player = getPlayer((EntityPlayerMP) event.getEntity());
+                ForgePlayerDeathEvent forgeCommandEvent = new ForgePlayerDeathEvent("", player, event.getSource().getDeathMessage(event.getEntityLiving()).toString());
                 sendMessage(forgeCommandEvent);
             }
         }
     }
 
-    ForgeServerPlayer getPlayer(ServerPlayerEntity player) {
+    ForgeServerPlayer getPlayer(EntityPlayerMP player) {
         ForgeServerPlayer forgeServerPlayer = new ForgeServerPlayer();
-        forgeServerPlayer.setNickname(player.getName().getString());
-        forgeServerPlayer.setDisplayName(player.getDisplayName().getString());
+        forgeServerPlayer.setNickname(player.getName());
+        forgeServerPlayer.setDisplayName(player.getDisplayName().toString());
 
-        forgeServerPlayer.setUuid(player.getUUID().toString());
-        forgeServerPlayer.setIpAddress(player.getIpAddress());
-        forgeServerPlayer.setSpeed(player.getSpeed());
-        forgeServerPlayer.setGameMode(player.gameMode.getGameModeForPlayer().toString());
-        forgeServerPlayer.setBlockX((int) player.getX());
-        forgeServerPlayer.setBlockY((int) player.getY());
-        forgeServerPlayer.setBlockZ((int) player.getZ());
+        forgeServerPlayer.setUuid(player.getUniqueID().toString());
+        forgeServerPlayer.setIpAddress(player.getPlayerIP());
 
-        forgeServerPlayer.setSwimming(player.isSwimming());
-        forgeServerPlayer.setSleeping(player.isSleeping());
-        forgeServerPlayer.setBlocking(player.isBlocking());
+        forgeServerPlayer.setSpeed(player.getAIMoveSpeed());
+        forgeServerPlayer.setGameMode(player.interactionManager.getGameType().getName());
+        forgeServerPlayer.setBlockX(player.getPosition().getX());
+        forgeServerPlayer.setBlockY(player.getPosition().getY());
+        forgeServerPlayer.setBlockZ(player.getPosition().getZ());
 
-        forgeServerPlayer.setFlying(player.isFallFlying());
-        forgeServerPlayer.setFlyingSpeed(player.flyingSpeed);
+        forgeServerPlayer.setSwimming(false);
+        forgeServerPlayer.setSleeping(player.isPlayerSleeping());
+        forgeServerPlayer.setBlocking(player.isActiveItemStackBlocking());
+
+        forgeServerPlayer.setFlying(player.capabilities.isFlying);
+        forgeServerPlayer.setFlyingSpeed(player.capabilities.getFlySpeed());
 
         return forgeServerPlayer;
     }

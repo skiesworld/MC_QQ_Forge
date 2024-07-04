@@ -1,7 +1,9 @@
 package com.github.theword.mcqq.commands;
 
-import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.command.CommandSource;
+
+import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
+import org.jetbrains.annotations.NotNull;
 
 public interface ForgeSubCommand {
 
@@ -11,6 +13,6 @@ public interface ForgeSubCommand {
 
     String getUsage();
 
-    int onCommand(CommandContext<CommandSource> context);
+    int onCommand(@NotNull MinecraftServer minecraftServer, @NotNull ICommandSender iCommandSender, String @NotNull [] strings);
 
 }

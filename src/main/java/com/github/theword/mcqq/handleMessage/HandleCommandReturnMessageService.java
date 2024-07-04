@@ -1,15 +1,13 @@
 package com.github.theword.mcqq.handleMessage;
 
-import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.command.CommandSource;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.text.TextComponentString;
 
 public class HandleCommandReturnMessageService implements HandleCommandReturnMessage {
 
     @Override
-    @SuppressWarnings("unchecked")
     public void handleCommandReturnMessage(Object object, String message) {
-        CommandContext<CommandSource> context = (CommandContext<CommandSource>) object;
-        context.getSource().sendSuccess(new StringTextComponent(message), false);
+        ICommandSender iCommandSender = (ICommandSender) object;
+        iCommandSender.sendMessage(new TextComponentString(message));
     }
 }

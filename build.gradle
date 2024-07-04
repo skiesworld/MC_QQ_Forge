@@ -1,61 +1,38 @@
-plugins {
-    id 'eclipse'
-    id 'idea'
-    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
-    id 'checkstyle'
+buildscript {
+    repositories {
+        maven {
+            url = uri(maven_url)
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("PACKAGE_READ_ONLY_TOKEN")
+            }
+        }
+        maven { url = 'https://maven.minecraftforge.net' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+    }
 }
 
+apply plugin: 'net.minecraftforge.gradle'
 
-group = mod_group_id
-version = System.getenv("MC_QQ_VERSION") ?: project.findProperty("mod_version")
-
-base {
-    archivesName = "${mod_name}_${minecraft_version}"
-}
+version = project.mod_version
+group = project.mod_group_id
 
 java {
+    archivesBaseName = "${mod_name}_${minecraft_version}"
     toolchain.languageVersion = JavaLanguageVersion.of(java_version)
 }
 
 ext {
     lombok_version = System.getenv("LOMBOK_VERSION") ?: project.findProperty("lombok_version")
     mcqq_tool_version = System.getenv("MCQQ_TOOL_VERSION") ?: project.findProperty("mcqq_tool_version")
-    slf4j_version = System.getenv("SLF4J_VERSION") ?: project.findProperty("slf4j_version")
-    slf4j_simple_version = System.getenv("SLF4J_SIMPLE_VERSION") ?: project.findProperty("slf4j_simple_version")
 }
 
-checkstyle {
-    toolVersion = "8.44"
-    configFile = file("${rootDir}/checkstyle.xml")
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }
-
-minecraft {
-    mappings channel: mapping_channel, version: mapping_version
-    copyIdeResources = true
-    runs {
-        configureEach {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
-        client {
-        }
-        server {
-            args '--nogui'
-        }
-        data {
-            workingDirectory project.file('run-data')
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-        }
-    }
-}
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven {
@@ -67,60 +44,86 @@ repositories {
     }
 }
 
-dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+minecraft {
 
-    implementation "org.slf4j:slf4j-api:${slf4j_version}"
-    compileOnly "org.slf4j:slf4j-simple:${slf4j_simple_version}"
-    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
-    implementation "org.projectlombok:lombok:${lombok_version}"
-    implementation "com.github.theword.mcqq:mc-qq-tool:${mcqq_tool_version}"
-}
+    mappings channel: mod_mapping_channel, version: mod_mapping_version
 
-tasks.named('processResources', ProcessResources).configure {
-    var replaceProperties = [
-            minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
-            forge_version       : forge_version, forge_version_range: forge_version_range,
-            loader_version_range: loader_version_range,
-            mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-            mod_authors         : mod_authors, mod_description: mod_description,
-    ]
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
 
-    inputs.properties replaceProperties
+            mods {
+                botapi {
+                    source sourceSets.main
+                }
+            }
+        }
 
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties + [project: project]
-    }
-}
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                botapi {
+                    source sourceSets.main
+                }
+            }
+        }
 
-jar {
-    duplicatesStrategy = 'EXCLUDE'
-    from {
-        configurations.compileClasspath.collect {
-            if (
-                    it.name.containsIgnoreCase("mc-qq-tool")
-                            || it.name.containsIgnoreCase("websocket")
-                            || it.name.containsIgnoreCase("snake")
-                            || it.name.containsIgnoreCase("slf4j")
-            )
-                zipTree(it)
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'botapi', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                botapi {
+                    source sourceSets.main
+                }
+            }
         }
     }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+    maven {
+        url 'https://maven.nova-committee.cn/releases'
+    }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
+    jarJar "com.github.theword.mcqq:mc-qq-tool:[0.0.1,1.0.0)"
+    annotationProcessor "com.github.theword.mcqq:mc-qq-tool:${mcqq_tool_version}"
+    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+    implementation "com.github.theword.mcqq:mc-qq-tool:${mcqq_tool_version}"
+    implementation "org.projectlombok:lombok:${lombok_version}"
+}
+
+// Example for how to get properties into the manifest for reading at runtime.
+jar {
     manifest {
         attributes([
-                "Specification-Title"     : mod_id,
-                "Specification-Vendor"    : mod_authors,
+                "Specification-Title"     : "botapi",
+                "Specification-Vendor"    : "cnlimiter",
                 "Specification-Version"   : "1", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : mod_authors,
+                "Implementation-Vendor"   : "cnlimiter",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
-
-    finalizedBy 'reobfJar'
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
+jar.finalizedBy('reobfJar')
+
+jarJar {
+    enable()
+    dependencies {
+        include(dependency(group: 'com.github.theword.mcqq', name: 'mc-qq-tool', version: '0.0.7'))
+    }
 }
