@@ -1,5 +1,14 @@
 # MC_QQ_Forge
 
+> [!WARNING]  
+> 项目已归档，请前往 [鹊桥](https://github.com/17TheWord/QueQiao) 获得全新体验
+
+> [!WARNING]  
+> 项目已归档，请前往 [鹊桥](https://github.com/17TheWord/QueQiao) 获得全新体验
+
+> [!WARNING]  
+> 项目已归档，请前往 [鹊桥](https://github.com/17TheWord/QueQiao) 获得全新体验
+
 一个简单的 `Forge MOD`，可以通过 [`nonebot-adapter-minecraft`](https://github.com/17TheWord/nonebot-adapter-minecraft)
 连接至 [`nonebot2`](https://github.com/nonebot/nonebot2)。
 
